@@ -20,7 +20,7 @@ macOS 10.11 El Capitan或更高版本：双击.mobileconfig文件以启动配置
 
 ## License
 
-Copyright (c) 2016 Mengdi Gao, This software is licensed under the [MIT License](LICENSE).
+Copyright (c) 2019 Mickey Zhang And MickeyMi, This software is licensed under the [MIT License](LICENSE).
 
 ---
 
