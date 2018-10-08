@@ -4,23 +4,17 @@ Recipe to build [`gaomd/ikev2-vpn-server`](https://registry.hub.docker.com/u/gao
 
 ## Usage
 
-### 1. Start the IKEv2 VPN Server
+### 1. 启动ikev2 And redsocks2
 
-    docker run --privileged -d --name ikev2-vpn-server --restart=always -p 500:500/udp -p 4500:4500/udp gaomd/ikev2-vpn-server:0.3.0
+    docker run -d --name ikev2-redsocks2 --privileged=true -p 500:500/udp -p 4500:4500/udp -e "SSIP=你的宿主机SS地址" -e "SSPORT=SS端口" ikev2-redsocks2:latest
 
-### 2. Generate the .mobileconfig (for iOS / macOS)
+### 2. 创建客户端配置文件 .mobileconfig (for iOS / macOS)
 
-    docker run --privileged -i -t --rm --volumes-from ikev2-vpn-server -e "HOST=vpn1.example.com" gaomd/ikev2-vpn-server:0.3.0 generate-mobileconfig > ikev2-vpn.mobileconfig
+    docker run --privileged -i -t --rm --volumes-from ikev2-redsocks2 -e "HOST=ikev2服务器地址" ikev2-redsocks2:latest generate-mobileconfig > ikev2-vpn.mobileconfig
 
-*Be sure to replace `vpn1.example.com` with your own domain name and resolve it to you server's IP address. Simply put an IP address is supported as well (and enjoy an even faster handshake speed).*
+*务必将`ikev2服务器地址`替换为您自己的域名，并将其解析为您服务器的IP地址。 简单地说，也支持IP地址（并享受更快的握手速度）。*
 
-Transfer the generated `ikev2-vpn.mobileconfig` file to your local computer via SSH tunnel (`scp`) or any other secure methods.
-
-### 3. Install the .mobileconfig (for iOS / macOS)
-
-- **iOS 9 or later**: AirDrop the `.mobileconfig` file to your iOS 9 device, finish the **Install Profile** screen;
-
-- **macOS 10.11 El Capitan or later**: Double click the `.mobileconfig` file to start the *profile installation* wizard.
+通过SSH隧道（`scp`）或任何其他安全方法将生成的`ikev2-vpn.mobileconfig`文件传输到本地计算机。
 
 ## Technical Details
 
@@ -32,6 +26,6 @@ Copyright (c) 2016 Mengdi Gao, This software is licensed under the [MIT License]
 
 ---
 
-\* IKEv2 protocol requires iOS 8 or later, macOS 10.11 El Capitan or later.
+\* IKEv2协议需要iOS 8或更高版本，macOS 10.11 El Capitan或更高版本。
 
-\* Install for **iOS 8 or later** or when your AirDrop fails: Send an E-mail to your iOS device with the `.mobileconfig` file as attachment, then tap the attachment to bring up and finish the **Install Profile** screen.
+\* 安装** iOS 8或更高版本**或当您的AirDrop失败时：使用`.mobileconfig`文件作为附件向您的iOS设备发送电子邮件，然后点击附件以启动并完成**安装 个人资料**屏幕。
